@@ -1,45 +1,19 @@
-import{
-    CREATE_EMPLOYEE,
-    FETCH_EMPLOYEES,
-    FETCH_EMPLOYEE,
-    DELETE_EMPLOYEE, 
-    EDIT_EMPLOYEE
-} from '../actions/types';
+import { FETCH_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, ADD_EMPLOYEE } from '../actions/types';
 
-//se define el estado inicial del reducer de empleados
-const initialState = {
-    employees:[]//el arreglo de empleados empieza vacío
+// Reducer para manejar la lista de empleados
+const employeesReducer = (state = [], action) => {
+  switch (action.type) {
+    case FETCH_EMPLOYEES:
+      return action.payload; // Actualiza el estado con la lista de empleados obtenida
+    case DELETE_EMPLOYEE:
+      return state.filter(employee => employee.id !== action.payload); // Elimina el empleado con el ID dado
+    case UPDATE_EMPLOYEE:
+      return state.map(employee => employee.id === action.payload.id ? action.payload : employee); // Actualiza el empleado existente
+    case ADD_EMPLOYEE:
+      return [...state, action.payload]; // Agrega un nuevo empleado a la lista
+    default:
+      return state; // Devuelve el estado actual si la acción no coincide
+  }
 };
 
-//Desarrollo del reducer de empleados
-
-export default (state = initialState, action) => {
-    switch (action.type){
-        case FETCH_EMPLOYEES:
-            //al obtener todos los empleados, actualiza el estado con la lista recibida
-            return{...state, employees: action.payload};
-        case FETCH_EMPLOYEE:
-            //obtiene un solo empleado y lo agrega
-            return{...state, employee: action.payload};
-        case CREATE_EMPLOYEE:
-            //Crea un nuevo empleado y lo agrega a la lista
-            return{...state, employees: [...state.employees, action.payload]};
-        case EDIT_EMPLOYEE:
-                //edita un empleado y actualiza la lista de empleados
-            return {
-                  ...state,
-                  employees: state.employees.map(emp =>
-                    emp.EMPLOYEE_ID === action.payload.EMPLOYEE_ID ? action.payload : emp
-                  )
-                };
-        case DELETE_EMPLOYEE:
-                //elimina un empleado de la lista
-            return {
-                  ...state,
-                  employees: state.employees.filter(emp => emp.EMPLOYEE_ID !== action.payload)
-                };
-        default:
-                //sino retorna el estado actual
-            return state;
-    }
-}
+export default employeesReducer;
