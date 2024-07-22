@@ -1,5 +1,26 @@
-import { FETCH_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, ADD_EMPLOYEE } from '../actions/types';
+import { 
+  FETCH_EMPLOYEES, 
+  //DELETE_EMPLOYEE, 
+  //UPDATE_EMPLOYEE, 
+  //ADD_EMPLOYEE 
+} from '../actions/types';
 
+const initialState = {
+  employees:[]
+};
+
+export default function(state = initialState, action) {
+  switch (action.type) {
+    case FETCH_EMPLOYEES:
+      return {
+        ...state,
+        employees: action.payload
+      };
+    default:
+      return state;
+  }
+}
+/* 
 // Reducer para manejar la lista de empleados
 const employeesReducer = (state = [], action) => {
   switch (action.type) {
@@ -17,3 +38,4 @@ const employeesReducer = (state = [], action) => {
 };
 
 export default employeesReducer;
+ */

@@ -1,4 +1,4 @@
-import { SELECT_EMPLOYEE } from '../actions/types';
+/* import { SELECT_EMPLOYEE } from '../actions/types';
 
 // Reducer para manejar el empleado seleccionado
 const selectedEmployeeReducer = (state = null, action) => {
@@ -11,3 +11,4 @@ const selectedEmployeeReducer = (state = null, action) => {
 };
 
 export default selectedEmployeeReducer;
+ */
