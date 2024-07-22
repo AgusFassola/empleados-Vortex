@@ -1,41 +1,54 @@
 import { 
   FETCH_EMPLOYEES, 
-  //DELETE_EMPLOYEE, 
-  //UPDATE_EMPLOYEE, 
-  //ADD_EMPLOYEE 
+  DELETE_EMPLOYEE, 
+  UPDATE_EMPLOYEE,
+  SELECT_EMPLOYEE, 
+  ADD_EMPLOYEE 
 } from '../actions/types';
 
 const initialState = {
-  employees:[]
+  employees:[],
+  selectedEmployee: null
 };
 
-export default function(state = initialState, action) {
+const employeeReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_EMPLOYEES:
       return {
         ...state,
         employees: action.payload
       };
-    default:
-      return state;
-  }
-}
-/* 
-// Reducer para manejar la lista de empleados
-const employeesReducer = (state = [], action) => {
-  switch (action.type) {
-    case FETCH_EMPLOYEES:
-      return action.payload; // Actualiza el estado con la lista de empleados obtenida
     case DELETE_EMPLOYEE:
-      return state.filter(employee => employee.id !== action.payload); // Elimina el empleado con el ID dado
+        return {
+          ...state,
+          employees: state.employees.filter(
+            emp => emp.id !== action.payload
+          )// Elimina el empleado con el ID dado
+        }; 
+    case SELECT_EMPLOYEE:
+      return {
+        ...state,
+        selectedEmployee: state.employees.find(
+          emp => emp.id === action.payload
+        )
+      };
     case UPDATE_EMPLOYEE:
-      return state.map(employee => employee.id === action.payload.id ? action.payload : employee); // Actualiza el empleado existente
+        return {
+          ...state,
+          employees: state.employees.map(
+            emp => emp.id === action.payload.id ? action.payload : emp
+          ),
+          selectedEmployee: null 
+          // Actualiza el empleado existente
+        };
     case ADD_EMPLOYEE:
-      return [...state, action.payload]; // Agrega un nuevo empleado a la lista
+        return {
+          ...state,
+          employees:[...state.employees, action.payload]
+        }; // Agrega un nuevo empleado a la lista
     default:
-      return state; // Devuelve el estado actual si la acción no coincide
+        return state; // Devuelve el estado actual si la acción no coincide
   }
 };
 
-export default employeesReducer;
- */
+export default employeeReducer;
