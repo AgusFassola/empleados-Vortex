@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addEmployee } from '../actions/employeeActions';
+import { addEmployee } from '../reducers/employeeSlice';
 
 const EmployeeCreate = () => {
     const [formData, setFormData] = useState({
@@ -22,15 +22,14 @@ const EmployeeCreate = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(addEmployee({ ...formData, EMPLOYEE_ID: Date.now() }));
+        dispatch(addEmployee({ ...formData, id: Date.now() }));
         alert("Empleado agregado correctamente");
         navigate('/');
     };
 
     return (
-        
         <form onSubmit={handleSubmit}>
-            <h2>Nuevo empleado</h2> 
+            <h2>Nuevo empleado</h2>
             <div>
                 <label>Nombre:</label>
                 <input
@@ -78,7 +77,6 @@ const EmployeeCreate = () => {
                     name="hireDate"
                     value={formData.hireDate}
                     onChange={handleChange}
-
                 />
             </div>
             <div>

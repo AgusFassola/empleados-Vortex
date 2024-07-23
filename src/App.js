@@ -1,8 +1,8 @@
 import React from 'react';
-import {  Routes , Route } from 'react-router-dom';
+import {  Route, Routes } from 'react-router-dom';
 import EmployeeList from './components/EmployeeList';
-import EmployeeDetail from './components/EmployeeDetail';
 import EmployeeCreate from './components/EmployeeCreate';
+import EmployeeDetail from './components/EmployeeDetail';
 import Navbar from './components/NavBar'; 
 
 const App = () => {
@@ -10,9 +10,10 @@ const App = () => {
     <div className="ui container">
         <Navbar/>
         <Routes>
-          <Route exact path='/' Component={EmployeeList}/>
-          <Route path='/employees/:id' Component={EmployeeDetail}/>
-          <Route path="/create" exact Component={EmployeeCreate} />
+
+                    <Route path="/" element={<EmployeeList />} />
+                    <Route path="/employees/new" element={<EmployeeCreate />} />
+                    <Route path="/employees/:id" element={<EmployeeDetail />} />
         </Routes>
       
     </div>

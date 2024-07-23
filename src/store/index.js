@@ -1,15 +1,10 @@
-import { createStore, applyMiddleware } from 'redux';
-import { thunk } from 'redux-thunk';
-import reducers from '../reducers';
+import { configureStore } from '@reduxjs/toolkit';
+import employeeReducer from '../reducers/employeeSlice';
 
-
-const initialState= {};
-const middleware = [thunk];
-
-// Creamos el store de Redux y aplicamos middleware thunk para manejar acciones asíncronas
-const store = createStore(
-    reducers,
-    initialState,
-    applyMiddleware(...middleware));
+const store = configureStore({
+  reducer: {
+    employeeData: employeeReducer
+  }
+});
 
 export default store;

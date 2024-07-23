@@ -1,64 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-//useParams permite acceder a parametros de la URL (id)
 import { useSelector, useDispatch } from "react-redux";
-//useSelector para acceder al estado de Redux y
-//useDispatch para enviar acciones
-import { selectEmployee, updateEmployee } from '../actions/employeeActions';
+import { selectEmployee, updateEmployee } from '../reducers/employeeSlice';
 
 const EmployeeDetail = () => {
-    const { id } = useParams();//obtengo el id del empleado desde URL
-    //const navigate = useNavigate(); //se para navegar o volver al inicio
-    const dispatch = useDispatch();
-    const employee = useSelector( state => 
-        state.employeeData.employees.find( emp => emp.id === parseInt(id))
-    );//guarda el empleado que coincide con el id del url
+    const { id } = useParams();//useParams permite acceder a parametros de la URL (id)
+    const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
+    const employee = useSelector(state => state.employeeData.employees.find(emp => emp.id === parseInt(id)));
 
-    const [ isEditing, setIsEditing ] = useState( false ) //creo un estado para controlar si estoy editando o no
-    const [ editedEmployee, setEditedEmployee ] = useState(employee || {});//estado para almacenar los cambios del empleado
+    const [isEditing, setIsEditing] = useState(false);//creo un estado para controlar si estoy editando o no
+    const [editedEmployee, setEditedEmployee] = useState(employee || {});//estado para almacenar los cambios del empleado
 
     useEffect(() => {
-        if (id){
-            dispatch(selectEmployee(id));
-            //envia el usuario seleccionado con su id
+        if (employee) {
+            setEditedEmployee(employee);
         }
-    }, [id, dispatch]);//se ejecuta al cargar o al cambiar el id o el dispatch
+    }, [employee]);
 
-
-    useEffect(() => {
-        if(employee){
-            setEditedEmployee(employee || {});
-            //estado con datos del empleado
-        }
-    },[employee]);
-
-    // Habilitar el modo edición
     const handleEditClick = () => {
-        setIsEditing(true); 
-      };
+        setIsEditing(true);
+    };
 
-    //Datos ingresados
     const handleInputChange = e => {
         const { name, value } = e.target;
         setEditedEmployee({ ...editedEmployee, [name]: value });
-        // Actualizo el estado de edición con los cambios
-      };
-    
-      //Botón guardar
+    };
+
     const handleSaveClick = () => {
-        dispatch(updateEmployee(editedEmployee)); 
-        // Envío la acción para actualizar el empleado
-        setIsEditing(false); 
-      };
-    
-      //Boton cancelar
-      const handleCancelClick = () => {
-        setEditedEmployee(employee || []); 
-        // Devuelvo el empleado sin cambios
-        setIsEditing(false); 
-      };
-    
-    if(!employee) {
+        dispatch(updateEmployee(editedEmployee));
+        setIsEditing(false);
+    };
+
+    const handleCancelClick = () => {
+        setEditedEmployee(employee);
+        setIsEditing(false);
+    };
+
+    if (!employee) {
         return (
             <div>
                 No se encontró el empleado
@@ -69,7 +47,6 @@ const EmployeeDetail = () => {
     return (
         <div>
             <h2>Detalles del empleado:</h2>
-
             {isEditing ? (
                 <div>
                     <div>
@@ -128,7 +105,7 @@ const EmployeeDetail = () => {
                     </div>
                     <button onClick={handleSaveClick}>Guardar</button>
                     <button onClick={handleCancelClick}>Cancelar</button>
-                    </div>
+                </div>
             ) : (
                 <div>
                     <div>
@@ -153,8 +130,6 @@ const EmployeeDetail = () => {
                         <strong>Salario:</strong> ${employee.salary}
                     </div>
                     <button onClick={handleEditClick}>Editar</button>
-                    
-                    
                 </div>
             )}
         </div>

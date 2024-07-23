@@ -1,16 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
   return (
     <div className="ui menu">
       <Link to="/" className="item">
         Inicio
       </Link>
-      <br></br>
-      <Link to="/create" className="item">
-        Nuevo empleado
-      </Link>
+      {location.pathname === '/' && (
+        <Link to="/employees/new" className="item">
+          Nuevo empleado
+        </Link>
+      )}
+
     </div>
   );
 };
