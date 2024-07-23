@@ -1,8 +1,34 @@
-// src/components/EmployeeTable.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchEmployees, deleteEmployee } from '../actions/employeeActions';
 
 const EmployeeTable = ({ employees }) => {
+
+  const dispatch = useDispatch();
+  //const employees = useSelector ( state => state.employeeData.employees);
+  /* const employee = useSelector( state => 
+        state.employeeData.employees.find( emp => emp.id === parseInt(id))
+  );//guarda el empleado que coincide con el id del url
+ */
+  useEffect(() => {
+    dispatch(fetchEmployees());
+  }, [dispatch]);
+    
+  if ( employees.length === 0 ){
+    return <div>No hay empleados</div>
+}
+
+  //eliminar un empleado
+  const handleDelete = (id) => {
+      if(window.confirm('Seguro que quieres eliminar el empleado?')){
+          dispatch(deleteEmployee(id));
+          //navigate('/');
+          //despues de eliminar vuelve a la pantalla principal
+      }
+  };
+
+
   return (
     <table className="ui celled table">
       <thead>
@@ -10,10 +36,6 @@ const EmployeeTable = ({ employees }) => {
           <th>ID</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>Email</th>
-          <th>Telefono</th>
-          <th>Inicio</th>
-          <th>Salario</th>
         </tr>
       </thead>
       <tbody>
@@ -30,12 +52,27 @@ const EmployeeTable = ({ employees }) => {
                     {employee.id}
                 </Link>
             </td>
-            <td>{employee.firstName}</td>
-            <td>{employee.lastName}</td>
-            <td>{employee.email}</td>
-            <td>{employee.phoneNumber}</td>
-            <td>{employee.hireDate}</td>
-            <td>{employee.salary}</td>
+            <td>
+                <Link 
+                    to={`/employees/${employee.id}`}
+                    /* agrego el id a la direccion url
+                     para poder obtener por ahí el id */
+                >
+                    {employee.firstName}
+                </Link>
+            </td>
+            <td>
+                <Link 
+                    to={`/employees/${employee.id}`}
+                    /* agrego el id a la direccion url
+                     para poder obtener por ahí el id */
+                >
+                    {employee.lastName}
+                </Link>
+            </td>
+            <td>
+              <button onClick={() => handleDelete(employee.id)}>Eliminar</button>
+            </td>
           </tr>
         ))}
       </tbody>

@@ -22,23 +22,23 @@ const employeeReducer = (state = initialState, action) => {
         return {
           ...state,
           employees: state.employees.filter(
-            emp => emp.id !== action.payload
+            employee => employee.id !== action.payload
           )// Elimina el empleado con el ID dado
         }; 
     case SELECT_EMPLOYEE:
       return {
         ...state,
         selectedEmployee: state.employees.find(
-          emp => emp.id === action.payload
+          employee => employee.id === action.payload
         )
       };
     case UPDATE_EMPLOYEE:
         return {
           ...state,
           employees: state.employees.map(
-            emp => emp.id === action.payload.id ? action.payload : emp
+            employee => employee.id === action.payload.id ? action.payload : employee
           ),
-          selectedEmployee: null 
+          //selectedEmployee: null 
           // Actualiza el empleado existente
         };
     case ADD_EMPLOYEE:
