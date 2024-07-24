@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchEmployees } from '../reducers/employeeSlice';
 import { Link } from 'react-router-dom';
 import { deleteEmployee } from "../reducers/employeeSlice";
+import '../index.css';
 
 const EmployeeList = () => {
     const dispatch = useDispatch();
@@ -20,13 +21,18 @@ const EmployeeList = () => {
     };
 
     if (employees.length === 0) {
-        return <div>No hay empleados disponibles</div>;
+        return (
+            <div className="alert alert-info">
+                No hay empleados disponibles
+            </div>);
     }
 
     return (
-        <div>
-            <h2>Lista de empleados</h2>
+        
+        <table className="table table-striped">
+            
             <thead>
+            <h2 className="mb-4">Lista de empleados</h2>
                 <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
@@ -36,25 +42,29 @@ const EmployeeList = () => {
                 {employees.map(employee => (
                     <tr key={employee.id}>
                         <td>
-                            <Link to={`/employees/${employee.id}`}>
-                                {employee.firstName} 
+                            <Link
+                            className="employee-link" 
+                            to={`/employees/${employee.id}`}>
+                                {employee.firstName}
                             </Link>
                         </td>
                         <td>
-                            <Link to={`/employees/${employee.id}`}>
-                            {employee.lastName}
+                            <Link
+                            className="employee-link" 
+                            to={`/employees/${employee.id}`}>
+                                {employee.lastName}
                             </Link>
                         </td>
-                        
+
                         <td>
-                            <button onClick={() => handleDeleteClick(employee.id)}>Eliminar</button>
+                            <button className="btn btn-danger" onClick={() => handleDeleteClick(employee.id)}>Eliminar</button>
                         </td>
 
                     </tr>
                 ))}
             </tbody>
 
-        </div>
+        </table>
     );
 };
 

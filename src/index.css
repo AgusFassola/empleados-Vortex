@@ -1,4 +1,34 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
 .ui.table {
     width: 100%;
     margin: 20px 0;
   }
+
+  .nav-link:hover{
+    font-weight: bold;
+  }
+.employee-link{
+    text-decoration: none;
+    color: black;
+  }
+
+.employee-link:hover{
+  color: blue;
+  font-weight: bold;
+}
+
+.table {
+  margin-top: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table thead th {
+  background-color: #007bff;
+  color: #fff;
+}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { selectEmployee, updateEmployee } from '../reducers/employeeSlice';
+import { updateEmployee } from '../reducers/employeeSlice';
+
 
 const EmployeeDetail = () => {
     const { id } = useParams();//useParams permite acceder a parametros de la URL (id)
@@ -38,21 +39,23 @@ const EmployeeDetail = () => {
 
     if (!employee) {
         return (
-            <div>
+            <div className="container mt-4">
                 No se encontró el empleado
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="container">
             <h2>Detalles del empleado:</h2>
+
             {isEditing ? (
                 <div>
                     <div>
                         <label>Nombre:</label>
                         <input
                             type="text"
+                            className="form-control"
                             name="firstName"
                             value={editedEmployee.firstName}
                             onChange={handleInputChange}
@@ -62,6 +65,7 @@ const EmployeeDetail = () => {
                         <label>Apellido:</label>
                         <input
                             type="text"
+                            className="form-control"
                             name="lastName"
                             value={editedEmployee.lastName}
                             onChange={handleInputChange}
@@ -71,6 +75,7 @@ const EmployeeDetail = () => {
                         <label>Email:</label>
                         <input
                             type="text"
+                            className="form-control"
                             name="email"
                             value={editedEmployee.email}
                             onChange={handleInputChange}
@@ -80,6 +85,7 @@ const EmployeeDetail = () => {
                         <label>Teléfono:</label>
                         <input
                             type="text"
+                            className="form-control"
                             name="phoneNumber"
                             value={editedEmployee.phoneNumber}
                             onChange={handleInputChange}
@@ -89,6 +95,7 @@ const EmployeeDetail = () => {
                         <label>Fecha de Contratación:</label>
                         <input
                             type="date"
+                            className="form-control"
                             name="hireDate"
                             value={editedEmployee.hireDate}
                             onChange={handleInputChange}
@@ -98,13 +105,14 @@ const EmployeeDetail = () => {
                         <label>Salario:</label>
                         <input
                             type="number"
+                            className="form-control"
                             name="salary"
                             value={editedEmployee.salary}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <button onClick={handleSaveClick}>Guardar</button>
-                    <button onClick={handleCancelClick}>Cancelar</button>
+                    <button className="btn btn-primary" onClick={handleSaveClick}>Guardar</button>
+                    <button className="btn btn-danger" onClick={handleCancelClick}>Cancelar</button>
                 </div>
             ) : (
                 <div>
@@ -129,7 +137,7 @@ const EmployeeDetail = () => {
                     <div>
                         <strong>Salario:</strong> ${employee.salary}
                     </div>
-                    <button onClick={handleEditClick}>Editar</button>
+                    <button className="btn btn-primary" onClick={handleEditClick}>Editar</button>
                 </div>
             )}
         </div>

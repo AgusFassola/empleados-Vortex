@@ -30,10 +30,11 @@ const EmployeeCreate = () => {
     return (
         <form onSubmit={handleSubmit}>
             <h2>Nuevo empleado</h2>
-            <div>
+            <div className='form-group'>
                 <label>Nombre:</label>
                 <input
                     type="text"
+                    className="form-control"
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
@@ -44,6 +45,7 @@ const EmployeeCreate = () => {
                 <label>Apellido:</label>
                 <input
                     type="text"
+                    className="form-control"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
@@ -54,6 +56,7 @@ const EmployeeCreate = () => {
                 <label>Email:</label>
                 <input
                     type="text"
+                    className="form-control"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -64,6 +67,7 @@ const EmployeeCreate = () => {
                 <label>Teléfono:</label>
                 <input
                     type="text"
+                    className="form-control"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
@@ -74,6 +78,7 @@ const EmployeeCreate = () => {
                 <label>Fecha de Contratación:</label>
                 <input
                     type="date"
+                    className="form-control"
                     name="hireDate"
                     value={formData.hireDate}
                     onChange={handleChange}
@@ -83,13 +88,14 @@ const EmployeeCreate = () => {
                 <label>Salario:</label>
                 <input
                     type="number"
+                    className="form-control"
                     name="salary"
                     value={formData.salary}
                     onChange={handleChange}
                     placeholder="Salario" required
                 />
             </div>
-            <button type="submit">Agregar</button>
+            <button className='btn btn-primary' type="submit">Agregar</button>
         </form>
     );
 };

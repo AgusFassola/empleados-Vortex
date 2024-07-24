@@ -1,20 +1,25 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {
   const location = useLocation();
   return (
-    <div className="ui menu">
-      <Link to="/" className="item">
-        Inicio
-      </Link>
-      {location.pathname === '/' && (
-        <Link to="/employees/new" className="item">
-          Nuevo empleado
-        </Link>
-      )}
+    <nav className='navbar navbar-light bg-light'>
+      <div className="container">
+      <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">Inicio</Link>
+            </li>
+            {location.pathname === '/' && (
+              <li className="nav-item">
+                <Link to="/employees/new" className="nav-link">Nuevo empleado</Link>
+              </li>
+            )}
+          </ul>
+      </div>
+    </nav>
 
-    </div>
   );
 };
 
