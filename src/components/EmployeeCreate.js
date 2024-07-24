@@ -22,6 +22,20 @@ const EmployeeCreate = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
+
+        // Validación para el email
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailValid.test(formData.email)) {
+            alert("Ingrese un correo electrónico válido.");
+            return;
+        }
+
+        // Validación para el teléfono (que tenga mínimo 10 caracteres)
+        if (formData.phoneNumber.length < 10) {
+            alert("El teléfono debe tener 10 digitos o más.");
+            return;
+        }
+
         dispatch(addEmployee({ ...formData, id: Date.now() }));
         alert("Empleado agregado correctamente");
         navigate('/');
@@ -92,7 +106,7 @@ const EmployeeCreate = () => {
                     name="salary"
                     value={formData.salary}
                     onChange={handleChange}
-                    placeholder="Salario" required
+                    placeholder="Salario" 
                 />
             </div>
             <button className='btn btn-primary' type="submit">Agregar</button>

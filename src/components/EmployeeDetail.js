@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { updateEmployee } from '../reducers/employeeSlice';
 
@@ -8,7 +8,7 @@ const EmployeeDetail = () => {
     const { id } = useParams();//useParams permite acceder a parametros de la URL (id)
     const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
     const employee = useSelector(state => state.employeeData.employees.find(emp => emp.id === parseInt(id)));
-
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);//creo un estado para controlar si estoy editando o no
     const [editedEmployee, setEditedEmployee] = useState(employee || {});//estado para almacenar los cambios del empleado
 
@@ -37,11 +37,14 @@ const EmployeeDetail = () => {
         setIsEditing(false);
     };
 
+    //const url = "https://search.brave.com/images?q=advertencia&source=web";
     if (!employee) {
         return (
-            <div className="container mt-4">
-                No se encontró el empleado
-            </div>
+            <div className="container mt-4 text-center">
+            <h2 className="text-center">Empleado no encontrado</h2>
+            <p className="text-center">El ID que estás buscando no existe.</p>
+            <button onClick={() => navigate('/')} className="btn btn-primary mt-3">Volver al inicio</button>
+        </div>
         );
     }
 
