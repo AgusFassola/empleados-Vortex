@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Navbar = () => {
   const location = useLocation();
   return (
-    <nav className='navbar navbar-light bg-light'>
+    <nav className='navbar'>
       <div className="container">
-      <ul className="navbar-nav">
+      <ul className="navbar-nav d-flex flex-row">
             <li className="nav-item">
               <Link to="/" className="nav-link">Inicio</Link>
             </li>

@@ -1,21 +1,44 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
-.ui.table {
-    width: 100%;
-    margin: 20px 0;
-  }
+/* Estilo para el navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem 1rem 2rem;
+  margin: 1rem;
+  background-color: #cadff5;
+  border-radius: 1rem;
+  width: 20rem;
+  font-size:1.3rem ;
+}
 
-  .nav-link:hover{
+.navbar .navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  margin-left: 1rem;
+
+}
+.nav-link:hover{
     font-weight: bold;
-  }
+}
+
+
+h2{
+  margin-left: 1rem;
+}
+/* Estilo para la tabla */
+
 .employee-link{
-    text-decoration: none;
-    color: black;
-  }
+  text-decoration: none;
+  color: black;
+}
 
 .employee-link:hover{
-  color: blue;
-  font-weight: bold;
+color: blue;
+font-weight: bold;
 }
 
 .table {
@@ -30,5 +53,35 @@
 
 .table thead th {
   background-color: #007bff;
-  color: #fff;
+  color: white;
+}
+.table thead th:hover {
+  color: lightblue;
+}
+
+/* Estilo para la paginación */
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.pagination .page-link {
+  color: #007bff;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.pagination .page-link:hover {
+  color: #0056b3;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+  color: white;
+  background-color: #007bff;
+  border-color: #007bff;
 }
