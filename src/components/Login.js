@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import '../index.css';
 
 const Login = () => {
 
@@ -20,11 +21,11 @@ const Login = () => {
     }
 
     return (
-        <div className='container mt-4'>
-            <h2>Iniciar Sesión</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Usuario: </label>
+        <div className='login-container vh-100'>
+            <h2 className='mb-4 text-center'>Iniciar Sesión</h2>
+            <form onSubmit={handleLogin} className='p-4 border rounded shadow'>
+                <div className='mb-4'>
+                    <label className='form-label'>Usuario: </label>
                     <input
                         placeholder='Usuario'
                         type='text'
@@ -33,8 +34,8 @@ const Login = () => {
                         required
                     />
                 </div>
-                <div>
-                    <label>Contraseña: </label>
+                <div className='mb-4'>
+                    <label className='form-label'>Contraseña: </label>
                     <input
                         placeholder='contraseña'
                         type='password'
@@ -44,7 +45,7 @@ const Login = () => {
                     />
                 </div>
                 <button
-                    className='btn btn-primary' 
+                    className='btn btn-primary w-100' 
                     type='submit'
                     >Ingresar
                 </button>
