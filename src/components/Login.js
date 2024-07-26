@@ -1,16 +1,30 @@
 import React from 'react'
 
+
 const Login = () => {
     return (
-        <div>
+        <div className='container mt-4'>
+            <h2>Iniciar Sesión</h2>
             <div>
-                <p>Usuario: </p>
-                <input placeholder='Usuario' />
+                <label>Usuario: </label>
+                <input
+                    placeholder='Usuario'
+                    type='text'
+                    className='form-control'
+                    required 
+                />
             </div>
             <div>
-                <p>Contraseña: </p>
-                <input placeholder='contraseña'></input>
+                <label>Contraseña: </label>
+                <input
+                    placeholder='contraseña'
+                    type='password'
+                    className='form-control'
+                    required 
+                />
             </div>
+            <button
+                className='btn btn-primary' type='submit'>Ingresar</button>
         </div>
 
     );
