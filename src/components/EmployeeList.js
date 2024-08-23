@@ -1,22 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchEmployees, deleteEmployee } from '../reducers/employeeSlice';
+//import { useDispatch } from "react-redux";
+//import { fetchEmployees, deleteEmployee } from '../reducers/employeeSlice';
 import { Link } from 'react-router-dom';
 import '../index.css';
 import ReactPaginate from "react-paginate";
+import axios from 'axios';
 
 const EmployeeList = () => {
-    const dispatch = useDispatch();
-    const employees = useSelector(state => state.employeeData.employees);
+    //const dispatch = useDispatch();
+    //const employees = useSelector(state => state.employeeData.employees);
     //guarda la lista de empleados
 
-    useEffect(() => {
-        dispatch(fetchEmployees());
-    }, [dispatch]);
+    const [ employees, setEmployees ] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const handleDeleteClick = (id) => {
+    //recarga la lista de empleados cuando hay un cambio
+    useEffect(() => {
+        //dispatch(fetchEmployees());
+        
+        const fetchEmployees = async () => {
+            try{
+                const response = await axios.get(`http://localhost:5000/api/employees`);
+                setEmployees(response.data);
+                console.log("empleados: ",response.data)
+            }catch(error){
+                setError('Error al cargar los empleados');
+                console.error("error cargando empleados", error);
+            } finally{
+                setLoading(false);
+            }
+        }
+        fetchEmployees();
+    }, []);
+
+    const handleDeleteClick = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar este empleado?")) {
-            dispatch(deleteEmployee(id));
+            //dispatch(deleteEmployee(id));
+            try{
+                await axios.delete(`/api/employees/${id}`);
+                setEmployees(prevEmployees => prevEmployees.filter(
+                    emp => emp.id !== id
+                ));
+            }catch(error){
+                setError('Error al eliminar el empleado.');
+                console.log("error eliminar el empleado",error);
+            }
         }
     };
 
@@ -49,12 +78,17 @@ const EmployeeList = () => {
     };
 
     //busqueda de empleado
-    const filteredEmployees = employees.filter((employee) => {
-        return (
-            employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            employee.lastName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    });
+    let filteredEmployees = [];
+    if(employees && employees.employees){
+         filteredEmployees = employees.employees.filter((employee) => {
+        
+            return (
+                employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.email.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        });
+    }
+    
 
     //array nuevo con empleados ordenados
     const sortedEmployees = filteredEmployees.sort(( a, b ) => {
@@ -69,6 +103,14 @@ const EmployeeList = () => {
         }
         return 0;//en caso de no haber campo, no cambia el orden
     });
+    
+    if(loading){
+        return <div className="alert alert-info">Cargando empleados...</div>;
+    }
+
+    if(error){
+        return <div className="alert alert-danger">{error}</div>;
+    }
 
     if (employees.length === 0) {
         return (
@@ -107,14 +149,14 @@ const EmployeeList = () => {
                                 <Link
                                     className="employee-link"
                                     to={`/employees/${employee.id}`}>
-                                    {employee.firstName}
+                                    {employee.name}
                                 </Link>
                             </td>
                             <td>
                                 <Link
                                     className="employee-link"
                                     to={`/employees/${employee.id}`}>
-                                    {employee.lastName}
+                                    {employee.email}
                                 </Link>
                             </td>
                             <td>

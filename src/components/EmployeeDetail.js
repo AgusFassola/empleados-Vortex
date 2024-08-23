@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
-import { updateEmployee } from '../reducers/employeeSlice';
-
+//import { useSelector, useDispatch } from "react-redux";
+//import { updateEmployee } from '../reducers/employeeSlice';
+import axios from 'axios';
 
 const EmployeeDetail = () => {
     const { id } = useParams();//useParams permite acceder a parametros de la URL (id)
-    const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
-    const employee = useSelector(state => state.employeeData.employees.find(emp => emp.id === parseInt(id)));
+    //const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
+    //const employee = useSelector(state => state.employeeData.employees.find(emp => emp.id === parseInt(id)));
     const navigate = useNavigate();
+    const [employee, setEmployee] = useState(null);
     const [isEditing, setIsEditing] = useState(false);//creo un estado para controlar si estoy editando o no
-    const [editedEmployee, setEditedEmployee] = useState(employee || {});//estado para almacenar los cambios del empleado
+    const [editedEmployee, setEditedEmployee] = useState({});//estado para almacenar los cambios del empleado
 
     useEffect(() => {
-        if (employee) {
-            setEditedEmployee(employee);
-        }
-    }, [employee]);
+        const fetchEmployee = async () => {
+            try{
+                const response = await axios.get(
+                    `http://localhost:5000/api/employee/${id}`
+                );
+                setEmployee(response.data);
+                setEditedEmployee(response.data);
+            }catch(error){
+                console.error("error enviando el empleado",error);
+                navigate('/not-found');
+            }
+        };
+        fetchEmployee();
+
+    }, [id, navigate]);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -27,9 +39,14 @@ const EmployeeDetail = () => {
         setEditedEmployee({ ...editedEmployee, [name]: value });
     };
 
-    const handleSaveClick = () => {
-        dispatch(updateEmployee(editedEmployee));
-        setIsEditing(false);
+    const handleSaveClick = async () => {
+        try{
+            const response = await axios.put(`http://localhost:5000/api/employees/${id}`);
+            setEmployee(response.data);
+            setIsEditing(false);
+        }catch(error){
+            console.error("error actualizando el empleado",error);
+        }
     };
 
     const handleCancelClick = () => {

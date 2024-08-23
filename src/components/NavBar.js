@@ -9,9 +9,9 @@ const Navbar = () => {
       <div className="container">
       <ul className="navbar-nav d-flex flex-row">
             <li className="nav-item">
-              <Link to="/" className="nav-link">Inicio</Link>
+              <Link to="/employees" className="nav-link">Inicio</Link>
             </li>
-            {location.pathname === '/' && (
+            {location.pathname === '/employees' && (
               <li className="nav-item">
                 <Link to="/employees/new" className="nav-link">Nuevo empleado</Link>
               </li>

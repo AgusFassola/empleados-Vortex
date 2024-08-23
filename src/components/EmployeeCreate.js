@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+//import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addEmployee } from '../reducers/employeeSlice';
+//import { addEmployee } from '../reducers/employeeSlice';
+import axios from 'axios';
 
 const EmployeeCreate = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
-        phoneNumber: '',
-        hireDate: '',
-        salary: ''
+        position: '',
+        salary: '',
+        address: ''
     });
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleChange = e => {
@@ -20,7 +20,7 @@ const EmployeeCreate = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
 
         // Validación para el email
@@ -31,41 +31,69 @@ const EmployeeCreate = () => {
         }
 
         // Validación para el teléfono (que tenga mínimo 10 caracteres)
-        if (formData.phoneNumber.length < 10) {
+        /* if (formData.phoneNumber.length < 10) {
             alert("El teléfono debe tener 10 digitos o más.");
             return;
-        }
+        } */
 
-        dispatch(addEmployee({ ...formData, id: Date.now() }));
+
+        /* dispatch(addEmployee({ ...formData, id: Date.now() }));
         alert("Empleado agregado correctamente");
-        navigate('/');
+        navigate('/'); */
+        /* try{
+            const response = await fetch('/api/employees/create',{
+                method: 'POST',
+                headers:{
+                    'content-type':'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if(!response.ok){
+                throw new Error('Error al crear el empleado');
+            }
+
+            alert('Empleado agregado correctamente');
+            navigate('/');
+
+        }catch(error){
+            alert('Error al agregar el empleado: '+ error.message);
+        } */
+
+        try{
+            const response = await axios.post(
+                'http://localhost:5000/api/employees/create', 
+                formData/* ,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, 
+                        'Content-Type': 'application/json', 
+                    }
+                } */
+            );
+            console.log("response:",response)
+            alert('Empleado agregado correctamente');
+            navigate('/employees');
+        }catch(error){
+            console.log("error al agregar el empleado")
+            alert('Error al agregar el empleado: '+ error.message);
+        }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <h2>Nuevo empleado</h2>
             <div className='form-group'>
-                <label>Nombre:</label>
+                <label>Nombre de Usuario:</label>
                 <input
                     type="text"
                     className="form-control"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
-                    placeholder="Nombre" required
+                    placeholder="Usuario" required
                 />
             </div>
-            <div>
-                <label>Apellido:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Apellido" required
-                />
-            </div>
+
             <div>
                 <label>Email:</label>
                 <input
@@ -77,24 +105,14 @@ const EmployeeCreate = () => {
                     placeholder="Email" required
                 />
             </div>
+
             <div>
-                <label>Teléfono:</label>
+                <label>Puesto de Trabajo:</label>
                 <input
                     type="text"
                     className="form-control"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    placeholder="Teléfono" required
-                />
-            </div>
-            <div>
-                <label>Fecha de Contratación:</label>
-                <input
-                    type="date"
-                    className="form-control"
-                    name="hireDate"
-                    value={formData.hireDate}
+                    name="position"
+                    value={formData.position}
                     onChange={handleChange}
                 />
             </div>
@@ -107,6 +125,17 @@ const EmployeeCreate = () => {
                     value={formData.salary}
                     onChange={handleChange}
                     placeholder="Salario" 
+                />
+            </div>
+            <div>
+                <label>Dirección:</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Dirección" 
                 />
             </div>
             <button className='btn btn-primary' type="submit">Agregar</button>
