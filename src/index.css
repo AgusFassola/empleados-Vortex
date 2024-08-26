@@ -4,12 +4,14 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 2rem 1rem 2rem;
-  margin: 1rem;
-  background-color: #cadff5;
+  padding: 1rem 2rem ;
+  margin: 1rem auto;
+  background-color: #4b79a1;
   border-radius: 1rem;
-  width: 20rem;
-  font-size:1.3rem ;
+  max-width: 800px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size:1.5rem ;
 }
 
 .navbar .navbar-nav {
@@ -18,16 +20,25 @@
 }
 
 .nav-item {
-  margin-left: 1rem;
+  margin-left: 1.5rem;
 
 }
+
+.nav-link {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: color 0.3s ease-in-out;
+}
 .nav-link:hover{
+  color: #d1e7ff;
     font-weight: bold;
 }
 
 
 h2{
   margin-left: 1rem;
+  font-size: 2rem;
+  color: #4b79a1;
 }
 /* Estilo para la tabla */
 

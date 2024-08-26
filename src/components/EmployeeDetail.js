@@ -12,7 +12,7 @@ const EmployeeDetail = () => {
     const [employee, setEmployee] = useState(null);
     const [isEditing, setIsEditing] = useState(false);//creo un estado para controlar si estoy editando o no
     const [editedEmployee, setEditedEmployee] = useState({});//estado para almacenar los cambios del empleado
-
+    const [errorMessage, setErrorMessage] = useState('');
     useEffect(() => {
         const fetchEmployee = async () => {
             try{
@@ -22,8 +22,8 @@ const EmployeeDetail = () => {
                 setEmployee(response.data);
                 setEditedEmployee(response.data);
             }catch(error){
-                console.error("error enviando el empleado",error);
-                navigate('/not-found');
+                console.log("error enviando el empleado",error);
+                //navigate('/not-found');
             }
         };
         fetchEmployee();
@@ -41,11 +41,14 @@ const EmployeeDetail = () => {
 
     const handleSaveClick = async () => {
         try{
-            const response = await axios.put(`http://localhost:5000/api/employees/${id}`);
-            setEmployee(response.data);
+            const response = await axios.put(`http://localhost:5000/api/employees/${id}`,
+                 editedEmployee);
+            setEmployee(response.data.employee);
             setIsEditing(false);
+            setErrorMessage('');
         }catch(error){
-            console.error("error actualizando el empleado",error);
+            console.log("error actualizando el empleado",error);
+            setErrorMessage('Error al actualizar el empleado');
         }
     };
 
@@ -60,7 +63,7 @@ const EmployeeDetail = () => {
             <div className="container mt-4 text-center">
             <h2 className="text-center">Empleado no encontrado</h2>
             <p className="text-center">El ID que estás buscando no existe.</p>
-            <button onClick={() => navigate('/')} className="btn btn-primary mt-3">Volver al inicio</button>
+            <button onClick={() => navigate('/employees')} className="btn btn-primary mt-3">Volver al inicio</button>
         </div>
         );
     }
@@ -69,6 +72,8 @@ const EmployeeDetail = () => {
         <div className="container">
             <h2>Detalles del empleado:</h2>
 
+            {errorMessage && <p className="text-danger">{errorMessage}</p>}
+            
             {isEditing ? (
                 <div>
                     <div>
@@ -76,21 +81,12 @@ const EmployeeDetail = () => {
                         <input
                             type="text"
                             className="form-control"
-                            name="firstName"
-                            value={editedEmployee.firstName}
+                            name="name"
+                            value={editedEmployee.name}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <div>
-                        <label>Apellido:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="lastName"
-                            value={editedEmployee.lastName}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+
                     <div>
                         <label>Email:</label>
                         <input
@@ -102,16 +98,16 @@ const EmployeeDetail = () => {
                         />
                     </div>
                     <div>
-                        <label>Teléfono:</label>
+                        <label>Posición:</label>
                         <input
                             type="text"
                             className="form-control"
-                            name="phoneNumber"
-                            value={editedEmployee.phoneNumber}
+                            name="position"
+                            value={editedEmployee.position}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <label>Fecha de Contratación:</label>
                         <input
                             type="date"
@@ -120,7 +116,7 @@ const EmployeeDetail = () => {
                             value={editedEmployee.hireDate}
                             onChange={handleInputChange}
                         />
-                    </div>
+                    </div> */}
                     <div>
                         <label>Salario:</label>
                         <input
@@ -131,32 +127,30 @@ const EmployeeDetail = () => {
                             onChange={handleInputChange}
                         />
                     </div>
+                    <div>
+                        <label>Dirección:</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="address"
+                            value={editedEmployee.address}
+                            onChange={handleInputChange}
+                        />
+                    </div>
                     <button className="btn btn-primary" onClick={handleSaveClick}>Guardar</button>
                     <button className="btn btn-danger" onClick={handleCancelClick}>Cancelar</button>
                 </div>
             ) : (
                 <div>
-                    <div>
-                        <strong>ID:</strong> {employee.id}
-                    </div>
-                    <div>
-                        <strong>Nombre:</strong> {employee.firstName}
-                    </div>
-                    <div>
-                        <strong>Apellido:</strong> {employee.lastName}
-                    </div>
-                    <div>
-                        <strong>Email:</strong> {employee.email}
-                    </div>
-                    <div>
-                        <strong>Telefono:</strong> {employee.phoneNumber}
-                    </div>
-                    <div>
+                    <div><strong>ID:</strong> {employee.id}</div>
+                    <div><strong>Nombre:</strong> {employee.name}</div>
+                    <div><strong>Email:</strong> {employee.email}</div>
+                    <div><strong>Posición:</strong> {employee.position}</div>
+                    {/* <div>
                         <strong>Fecha de Contratación:</strong> {employee.hireDate}
-                    </div>
-                    <div>
-                        <strong>Salario:</strong> ${employee.salary}
-                    </div>
+                    </div> */}
+                    <div><strong>Salario:</strong> ${employee.salary}</div>
+                    <div><strong>Dirección:</strong> {employee.address}</div>
                     <button className="btn btn-primary" onClick={handleEditClick}>Editar</button>
                 </div>
             )}

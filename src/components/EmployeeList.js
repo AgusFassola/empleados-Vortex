@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import { useDispatch } from "react-redux";
 //import { fetchEmployees, deleteEmployee } from '../reducers/employeeSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../index.css';
 import ReactPaginate from "react-paginate";
 import axios from 'axios';
@@ -10,7 +10,7 @@ const EmployeeList = () => {
     //const dispatch = useDispatch();
     //const employees = useSelector(state => state.employeeData.employees);
     //guarda la lista de empleados
-
+    const navigate = useNavigate();
     const [ employees, setEmployees ] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,11 +22,11 @@ const EmployeeList = () => {
         const fetchEmployees = async () => {
             try{
                 const response = await axios.get(`http://localhost:5000/api/employees`);
-                setEmployees(response.data);
+                setEmployees(response.data.employees);
                 console.log("empleados: ",response.data)
             }catch(error){
                 setError('Error al cargar los empleados');
-                console.error("error cargando empleados", error);
+                console.log("error cargando empleados", error);
             } finally{
                 setLoading(false);
             }
@@ -35,13 +35,17 @@ const EmployeeList = () => {
     }, []);
 
     const handleDeleteClick = async (id) => {
+
         if (window.confirm("¿Estás seguro de que deseas eliminar este empleado?")) {
             //dispatch(deleteEmployee(id));
             try{
-                await axios.delete(`/api/employees/${id}`);
+                await axios.delete(`http://localhost:5000/api/employees/${id}`);
                 setEmployees(prevEmployees => prevEmployees.filter(
                     emp => emp.id !== id
                 ));
+                console.log('empleado eliminado correctamente')
+                navigate('/employees');
+                
             }catch(error){
                 setError('Error al eliminar el empleado.');
                 console.log("error eliminar el empleado",error);
@@ -49,25 +53,12 @@ const EmployeeList = () => {
         }
     };
 
-    //PARA PAGINACION   
-    const [pageNumber, setPageNumber] = useState(0);
-    const employeesPerPage = 5;
-    const pagesVisited = pageNumber * employeesPerPage;
+    
 
     //PARA ORDENAR
     const [ sortField, setSortField ] = useState(null);
     const [ sortDirection, setSortDirection ] = useState('asc');
 
-    //PARA BUSCAR
-    const [ searchTerm, setSearchTerm ] = useState('');
-
-    //PARA PAGINACION 
-    const pageCount = Math.ceil(employees.length / employeesPerPage);//total de páginas necesarias redondeando para arriba
-    const changePage = ({ selected }) => {
-        setPageNumber(selected);//actualiza la página seleccionada
-    };
-
-    //PARA ORDENAR- recibe Nombre o Apellido
     const handleSort = (field) => {
         const newSortDirection = 
             sortField === field &&
@@ -77,18 +68,28 @@ const EmployeeList = () => {
         setSortDirection(newSortDirection);
     };
 
-    //busqueda de empleado
-    let filteredEmployees = [];
-    if(employees && employees.employees){
-         filteredEmployees = employees.employees.filter((employee) => {
-        
+    //PARA BUSCAR
+    const [ searchTerm, setSearchTerm ] = useState('');
+   
+       const filteredEmployees = employees.filter((employee) => {
             return (
                 employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                employee.email.toLowerCase().includes(searchTerm.toLowerCase())
+                employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.position.title.toLowerCase().includes(searchTerm.toLowerCase())
             );
         });
-    }
     
+    
+
+    //PARA PAGINACION   
+    const [pageNumber, setPageNumber] = useState(0);
+    const employeesPerPage = 5;
+    const pagesVisited = pageNumber * employeesPerPage;
+    
+    const pageCount =  Math.ceil(filteredEmployees.length / employeesPerPage);//total de páginas necesarias redondeando para arriba
+    const changePage = ({ selected }) => {
+        setPageNumber(selected);//actualiza la página seleccionada
+    };
 
     //array nuevo con empleados ordenados
     const sortedEmployees = filteredEmployees.sort(( a, b ) => {
@@ -135,8 +136,9 @@ const EmployeeList = () => {
                 <thead>
 
                     <tr>
-                        <th onClick={() => handleSort('firstName')}>Nombre</th>
-                        <th onClick={() => handleSort('lastName')}>Apellido</th>
+                        <th onClick={() => handleSort('name')}>Nombre</th>
+                        <th onClick={() => handleSort('position.title')}>Puesto</th>
+                        <th onClick={() => handleSort('email')}>Email</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -146,10 +148,18 @@ const EmployeeList = () => {
                     {sortedEmployees.slice(pagesVisited, pagesVisited + employeesPerPage).map(employee => (
                         <tr key={employee.id}>
                             <td>
-                                <Link
+                                <Link 
                                     className="employee-link"
                                     to={`/employees/${employee.id}`}>
                                     {employee.name}
+                                    
+                                </Link>
+                            </td>
+                            <td>
+                                <Link
+                                    className="employee-link"
+                                    to={`/employees/${employee.id}`}>
+                                    {employee.position.title}
                                 </Link>
                             </td>
                             <td>
@@ -159,6 +169,7 @@ const EmployeeList = () => {
                                     {employee.email}
                                 </Link>
                             </td>
+                            
                             <td>
                                 <button 
                                     className="btn btn-danger" 
