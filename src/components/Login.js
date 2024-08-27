@@ -8,13 +8,9 @@ const Login = () =>{
     const [ error, setError ] = useState('');
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-    }
 
     const handleLogin = async (e) =>{
         e.preventDefault();
-        handleLogout();
         try{
             const response = await axios.post(
                 'http://localhost:5000/api/users/login', 

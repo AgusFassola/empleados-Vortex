@@ -32,7 +32,7 @@ const EmployeeList = () => {
             }
         }
         fetchEmployees();
-    }, []);
+    }, [setEmployees]);
 
     const handleDeleteClick = async (id) => {
 

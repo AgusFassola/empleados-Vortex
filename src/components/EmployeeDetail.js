@@ -17,10 +17,11 @@ const EmployeeDetail = () => {
         const fetchEmployee = async () => {
             try{
                 const response = await axios.get(
-                    `http://localhost:5000/api/employee/${id}`
+                    `http://localhost:5000/api/employees/${id}`
                 );
-                setEmployee(response.data);
-                setEditedEmployee(response.data);
+                console.log("empleado: ",response.data)
+                setEmployee(response.data.employee);
+                //setEditedEmployee(response.data.employee);
             }catch(error){
                 console.log("error enviando el empleado",error);
                 //navigate('/not-found');
@@ -32,6 +33,14 @@ const EmployeeDetail = () => {
 
     const handleEditClick = () => {
         setIsEditing(true);
+        const updatedEmployee = {
+            name:  employee.name,
+            email: employee.email,
+            position: employee.position.title,
+            salary: employee.salary,
+            address: employee.address
+        };
+        setEditedEmployee(updatedEmployee)
     };
 
     const handleInputChange = e => {
@@ -41,9 +50,29 @@ const EmployeeDetail = () => {
 
     const handleSaveClick = async () => {
         try{
-            const response = await axios.put(`http://localhost:5000/api/employees/${id}`,
-                 editedEmployee);
-            setEmployee(response.data.employee);
+            const token = localStorage.getItem('token');
+
+            //const data = { "name":"ingenieroPrueba2",position:"QA"  }
+
+            const updatedEmployee = {
+                name: editedEmployee.name,
+                email: editedEmployee.email,
+                position: editedEmployee.position,
+                salary: editedEmployee.salary,
+                address: editedEmployee.address 
+            };
+
+            const response = await axios.patch(`http://localhost:5000/api/employees/${id}`,
+                 updatedEmployee,
+                /* {
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                } */
+            );
+            console.log("Empleado?", response)
+
+            setEmployee(updatedEmployee);
             setIsEditing(false);
             setErrorMessage('');
         }catch(error){
@@ -55,6 +84,7 @@ const EmployeeDetail = () => {
     const handleCancelClick = () => {
         setEditedEmployee(employee);
         setIsEditing(false);
+        setErrorMessage('');
     };
 
     //const url = "https://search.brave.com/images?q=advertencia&source=web";
@@ -145,7 +175,7 @@ const EmployeeDetail = () => {
                     <div><strong>ID:</strong> {employee.id}</div>
                     <div><strong>Nombre:</strong> {employee.name}</div>
                     <div><strong>Email:</strong> {employee.email}</div>
-                    <div><strong>Posición:</strong> {employee.position}</div>
+                    <div><strong>Posición:</strong> {employee.position.title}</div>
                     {/* <div>
                         <strong>Fecha de Contratación:</strong> {employee.hireDate}
                     </div> */}
