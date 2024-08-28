@@ -3,7 +3,7 @@ import employeeReducer from '../reducers/employeeSlice';
 
 const store = configureStore({
   reducer: {
-    employeeData: employeeReducer
+    employees: employeeReducer
   }
 });
 

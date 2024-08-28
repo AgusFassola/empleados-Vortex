@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-//import { useSelector, useDispatch } from "react-redux";
-//import { updateEmployee } from '../reducers/employeeSlice';
-import axios from 'axios';
+import { useSelector, useDispatch } from "react-redux";
+import { fetchEmployeeById, updateEmployee } from '../reducers/employeeSlice';
+//import axios from 'axios';
 
 const EmployeeDetail = () => {
     const { id } = useParams();//useParams permite acceder a parametros de la URL (id)
-    //const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
-    //const employee = useSelector(state => state.employeeData.employees.find(emp => emp.id === parseInt(id)));
+    const dispatch = useDispatch();//useDispatch para enviar acciones y useSelector para acceder al estado de Redux 
     const navigate = useNavigate();
-    const [employee, setEmployee] = useState(null);
+    const employee = useSelector(state => state.employees.selectedEmployee );
+    //const [employee, setEmployee] = useState(null);
     const [isEditing, setIsEditing] = useState(false);//creo un estado para controlar si estoy editando o no
     const [editedEmployee, setEditedEmployee] = useState({});//estado para almacenar los cambios del empleado
     const [errorMessage, setErrorMessage] = useState('');
+
     useEffect(() => {
-        const fetchEmployee = async () => {
+        /* const fetchEmployee = async () => {
             try{
                 const response = await axios.get(
                     `http://localhost:5000/api/employees/${id}`
@@ -27,20 +28,31 @@ const EmployeeDetail = () => {
                 //navigate('/not-found');
             }
         };
-        fetchEmployee();
+        fetchEmployee(); */
 
-    }, [id, navigate]);
+        if(!employee){
+            dispatch(fetchEmployeeById(id));
+        }else{
+            setEditedEmployee({
+                name:  employee.name,
+                email: employee.email,
+                position: employee.position.title,
+                salary: employee.salary,
+                address: employee.address
+            });
+        }
+    }, [dispatch, id, employee]);
 
     const handleEditClick = () => {
         setIsEditing(true);
-        const updatedEmployee = {
+        /* const updatedEmployee = {
             name:  employee.name,
             email: employee.email,
             position: employee.position.title,
             salary: employee.salary,
             address: employee.address
         };
-        setEditedEmployee(updatedEmployee)
+        setEditedEmployee(updatedEmployee) */
     };
 
     const handleInputChange = e => {
@@ -50,7 +62,7 @@ const EmployeeDetail = () => {
 
     const handleSaveClick = async () => {
         try{
-            const token = localStorage.getItem('token');
+            //const token = localStorage.getItem('token');
 
             //const data = { "name":"ingenieroPrueba2",position:"QA"  }
 
@@ -61,18 +73,21 @@ const EmployeeDetail = () => {
                 salary: editedEmployee.salary,
                 address: editedEmployee.address 
             };
+            console.log("si ingrese", updatedEmployee)
+            await dispatch(updateEmployee({ id, updatedData: updatedEmployee }));
+            console.log("si ingrese", updateEmployee({ id, updatedData: updatedEmployee }))
 
-            const response = await axios.patch(`http://localhost:5000/api/employees/${id}`,
+            /* const response = await axios.patch(`http://localhost:5000/api/employees/${id}`,
                  updatedEmployee,
                 /* {
                     headers:{
                         Authorization: `Bearer ${token}`
                     }
                 } */
-            );
-            console.log("Empleado?", response)
+            //);*/
+            //console.log("Empleado?", response)
 
-            setEmployee(updatedEmployee);
+            //setEmployee(updatedEmployee);
             setIsEditing(false);
             setErrorMessage('');
         }catch(error){
@@ -82,12 +97,19 @@ const EmployeeDetail = () => {
     };
 
     const handleCancelClick = () => {
-        setEditedEmployee(employee);
+        //setEditedEmployee(employee);
         setIsEditing(false);
         setErrorMessage('');
+        setEditedEmployee({
+            name:  employee.name,
+            email: employee.email,
+            position: employee.position.title,
+            salary: employee.salary,
+            address: employee.address
+        });
+        
     };
 
-    //const url = "https://search.brave.com/images?q=advertencia&source=web";
     if (!employee) {
         return (
             <div className="container mt-4 text-center">
