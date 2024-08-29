@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-//import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-//import { addEmployee } from '../reducers/employeeSlice';
-import axios from 'axios';
+import { addEmployee } from '../../reducers/employeeSlice';
+//import axios from 'axios';
 
 const EmployeeCreate = () => {
     const [formData, setFormData] = useState({
@@ -12,7 +12,7 @@ const EmployeeCreate = () => {
         salary: '',
         address: ''
     });
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleChange = e => {
@@ -24,22 +24,21 @@ const EmployeeCreate = () => {
         e.preventDefault();
 
         // Validación para el email
-        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        /* const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailValid.test(formData.email)) {
             alert("Ingrese un correo electrónico válido.");
             return;
-        }
-
-        // Validación para el teléfono (que tenga mínimo 10 caracteres)
-        /* if (formData.phoneNumber.length < 10) {
-            alert("El teléfono debe tener 10 digitos o más.");
-            return;
         } */
-
-
-        /* dispatch(addEmployee({ ...formData, id: Date.now() }));
+       try{
+        console.log("nuevo empleado:",formData)
+        await dispatch(addEmployee({ ...formData, id: Date.now() }));
         alert("Empleado agregado correctamente");
-        navigate('/'); */
+        navigate('/employees');
+        console.log("nuevo empleado:",formData)
+       }catch(error){
+        alert("error agregando el empleado: "+ error.message);
+       }
+    };
         /* try{
             const response = await fetch('/api/employees/create',{
                 method: 'POST',
@@ -59,16 +58,16 @@ const EmployeeCreate = () => {
             alert('Error al agregar el empleado: '+ error.message);
         } */
 
-        try{
+        /* try{
             const response = await axios.post(
                 'http://localhost:5000/api/employees/create', 
-                formData/* ,
+                formData ,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`, 
                         'Content-Type': 'application/json', 
                     }
-                } */
+                } 
             );
             console.log("response:",response)
             alert('Empleado agregado correctamente');
@@ -76,8 +75,8 @@ const EmployeeCreate = () => {
         }catch(error){
             console.log("error al agregar el empleado")
             alert('Error al agregar el empleado: '+ error.message);
-        }
-    };
+        } */
+
 
     return (
         <form onSubmit={handleSubmit}>

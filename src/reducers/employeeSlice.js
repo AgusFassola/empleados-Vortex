@@ -31,7 +31,7 @@ export const fetchEmployeeById = createAsyncThunk('employees/fetchEmployeeById',
 
 //Agregar un empleado 
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (employeeData) => {
-  const response = await axios.post('http://localhost:5000/api/employees', employeeData);
+  const response = await axios.post('http://localhost:5000/api/employees/create', employeeData);
   return response.data.employee;
 });
 
@@ -40,7 +40,6 @@ export const updateEmployee = createAsyncThunk('employees/updateEmployee', async
   const response = await axios.patch(`http://localhost:5000/api/employees/${id}`, updatedData);
   return response.data.employee;
 });
-console.log("actualizar_usuario",updateEmployee )
 
 
 //Eliminar un empleado 
@@ -63,7 +62,26 @@ const employeeSlice = createSlice({
     selectEmployee: (state, action) => {
       state.selectedEmployee = state.employees.find(employee => employee.id === action.payload);
     },
+  sortEmployees: (state, action) => {
+    const { field, direction } = action.payload;
+    state.employees.sort((a, b) => {
+      if (direction === 'asc') {
+        return a[field] > b[field] ? 1 : -1;
+      } else {
+        return a[field] < b[field] ? 1 : -1;
+      }
+    });
   },
+  filterEmployees: (state, action) => {
+    const searchTerm = action.payload.toLowerCase();
+    state.employees = state.employees.filter(
+      (employee) =>
+        employee.name.toLowerCase().includes(searchTerm) ||
+        employee.email.toLowerCase().includes(searchTerm) ||
+        employee.position.title.toLowerCase().includes(searchTerm)
+    );
+  },
+},
   extraReducers: (builder) => {
     builder
         //handle fetchEmployees
@@ -115,5 +133,5 @@ const employeeSlice = createSlice({
 });
 
 //export const { fetchEmployees, deleteEmployee, selectEmployee, updateEmployee, addEmployee } = employeeSlice.actions;
-export const { selectEmployee } = employeeSlice.actions;
+export const { selectEmployee, sortEmployees, filterEmployees } = employeeSlice.actions;
 export default employeeSlice.reducer;

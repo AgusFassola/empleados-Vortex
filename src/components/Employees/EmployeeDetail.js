@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEmployeeById, updateEmployee } from '../reducers/employeeSlice';
+import { fetchEmployeeById, updateEmployee } from '../../reducers/employeeSlice';
 //import axios from 'axios';
 
 const EmployeeDetail = () => {
@@ -76,7 +76,7 @@ const EmployeeDetail = () => {
             console.log("si ingrese", updatedEmployee)
             await dispatch(updateEmployee({ id, updatedData: updatedEmployee }));
             console.log("si ingrese", updateEmployee({ id, updatedData: updatedEmployee }))
-
+            dispatch(fetchEmployeeById(id));
             /* const response = await axios.patch(`http://localhost:5000/api/employees/${id}`,
                  updatedEmployee,
                 /* {

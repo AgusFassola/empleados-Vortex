@@ -20,20 +20,25 @@ const Navbar = () => {
         </Link>
         {token && (
           <>
-          <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto">
-              <li className="nav-item">
-                <Link to="/employees" className="nav-link">
-                  Inicio
-                </Link>
-              </li>
-              {location.pathname === "/employees" && (
+            {location.pathname !== "/employees" && (
                 <li className="nav-item">
-                  <Link to="/employees/new" className="nav-link">
-                    Nuevo empleado
+                  <Link to="/employees" className="nav-link">
+                    Empleados
                   </Link>
                 </li>
               )}
+            <li className="nav-item">
+                <Link to="/users" className="nav-link">
+                  Usuarios
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/positions" className="nav-link">
+                  Puestos
+                </Link>
+              </li>
+              
             </ul>
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
@@ -42,9 +47,10 @@ const Navbar = () => {
                   >Cerrar Sesión</button>
               </li>
             </ul>
-          </div> 
+          
           </>
         )}
+        
       </div>
     </nav>
   );

@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
-//import { useDispatch } from "react-redux";
-//import { fetchEmployees, deleteEmployee } from '../reducers/employeeSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployees, deleteEmployee, sortEmployees, filterEmployees } from '../../reducers/employeeSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import '../index.css';
+import '../../index.css';
 import ReactPaginate from "react-paginate";
-import axios from 'axios';
+//import axios from 'axios';
 
 const EmployeeList = () => {
-    //const dispatch = useDispatch();
-    //const employees = useSelector(state => state.employeeData.employees);
-    //guarda la lista de empleados
+    const dispatch = useDispatch();
+    const { employees, loading, error } = useSelector(state => state.employees);
     const navigate = useNavigate();
-    const [ employees, setEmployees ] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    //const [ employees, setEmployees ] = useState([]);
+    //const [loading, setLoading] = useState(true);
+    //const [error, setError] = useState(null);
 
     //recarga la lista de empleados cuando hay un cambio
     useEffect(() => {
-        //dispatch(fetchEmployees());
+        dispatch(fetchEmployees());
         
-        const fetchEmployees = async () => {
+        /* const fetchEmployees = async () => {
             try{
                 const response = await axios.get(`http://localhost:5000/api/employees`);
                 setEmployees(response.data.employees);
@@ -30,15 +29,15 @@ const EmployeeList = () => {
             } finally{
                 setLoading(false);
             }
-        }
-        fetchEmployees();
-    }, [setEmployees]);
+        } 
+        fetchEmployees();*/
+    }, [dispatch]);
 
     const handleDeleteClick = async (id) => {
 
         if (window.confirm("¿Estás seguro de que deseas eliminar este empleado?")) {
-            //dispatch(deleteEmployee(id));
-            try{
+            dispatch(deleteEmployee(id));
+            /* try{
                 await axios.delete(`http://localhost:5000/api/employees/${id}`);
                 setEmployees(prevEmployees => prevEmployees.filter(
                     emp => emp.id !== id
@@ -49,7 +48,7 @@ const EmployeeList = () => {
             }catch(error){
                 setError('Error al eliminar el empleado.');
                 console.log("error eliminar el empleado",error);
-            }
+            } */
         }
     };
 
@@ -60,16 +59,22 @@ const EmployeeList = () => {
     const [ sortDirection, setSortDirection ] = useState('asc');
 
     const handleSort = (field) => {
-        const newSortDirection = 
+        dispatch(sortEmployees({ field, direction: 'asc' }));
+        /* const newSortDirection = 
             sortField === field &&
             sortDirection === 'asc' ? 'desc' : 'asc'
         //actualiza el campo y la direccion
         setSortField(field);
-        setSortDirection(newSortDirection);
+        setSortDirection(newSortDirection); */
     };
 
     //PARA BUSCAR
     const [ searchTerm, setSearchTerm ] = useState('');
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        dispatch(filterEmployees(e.target.value));
+    };
    
        const filteredEmployees = employees.filter((employee) => {
             return (
@@ -122,7 +127,10 @@ const EmployeeList = () => {
 
     return (
         <div>
-            <h2 className="mb-4">Lista de empleados</h2>
+            <h2 className="mb-4">Lista de empleados:</h2>
+            <Link 
+                to="/employees/new" className="btn btn-primary mb-3"
+            >Nuevo Empleado</Link> 
             <div className="mb-3">
                 <input
                     type="text"
@@ -171,6 +179,9 @@ const EmployeeList = () => {
                             </td>
                             
                             <td>
+                                <Link to={`/employees/${employee.id}`} 
+                                    className="btn btn-info ml-2"
+                                >Detalles</Link>
                                 <button 
                                     className="btn btn-danger" 
                                     onClick={() => handleDeleteClick(employee.id)}
