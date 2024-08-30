@@ -28,16 +28,22 @@ const Navbar = () => {
                   </Link>
                 </li>
               )}
+
+              {location.pathname !== "/users" && (
             <li className="nav-item">
                 <Link to="/users" className="nav-link">
                   Usuarios
                 </Link>
               </li>
+              )}
+
+              {location.pathname !== "/positions" && (
               <li className="nav-item">
                 <Link to="/positions" className="nav-link">
                   Puestos
                 </Link>
               </li>
+              )}
               
             </ul>
             <ul className="navbar-nav me-auto">

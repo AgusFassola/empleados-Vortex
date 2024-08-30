@@ -119,6 +119,9 @@ const EmployeeDetail = () => {
         </div>
         );
     }
+    // Obtengo el rol del usuario desde el localStorage
+    const token = localStorage.getItem("token");
+    const role = token ? JSON.parse(atob(token.split('.')[1])).role : null;
 
     return (
         <div className="container">
@@ -203,7 +206,9 @@ const EmployeeDetail = () => {
                     </div> */}
                     <div><strong>Salario:</strong> ${employee.salary}</div>
                     <div><strong>Dirección:</strong> {employee.address}</div>
-                    <button className="btn btn-primary" onClick={handleEditClick}>Editar</button>
+                    {role === 'admin' && (
+                        <button className="btn btn-primary" onClick={handleEditClick}>Editar</button>
+                    )}
                 </div>
             )}
         </div>

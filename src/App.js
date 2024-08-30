@@ -9,7 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import UserList from "./components/Users/UserList";
 import UserCreate from "./components/Users/UserCreate";
 import UserDetail from "./components/Users/UserDetail";
-
+import PositionList from "./components/Positions/PositionList";
+import PositionCreate from "./components/Positions/PositionCreate";
 
 const App = () => {
   return (
@@ -46,6 +47,16 @@ const App = () => {
         <Route path="/users/:id" 
           element={
             <PrivateRoute><UserDetail /></PrivateRoute>
+          }
+        />
+        <Route path="/positions" 
+          element={
+            <PrivateRoute><PositionList /></PrivateRoute>
+          }
+        />
+        <Route path="/positions/new" 
+          element={
+            <PrivateRoute><PositionCreate /></PrivateRoute>
           }
         />
       </Routes>

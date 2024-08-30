@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers, deleteUser } from '../../reducers/usersSlice';
-import { Link } from 'react-router-dom';
+import { fetchPositions, deletePosition } from '../../reducers/positionSlice';
+import { Link} from 'react-router-dom';
 import '../../index.css';
 import ReactPaginate from "react-paginate";
+//import axios from 'axios';
 
-const UserList = () => {
+const PositionList = () => {
     const dispatch = useDispatch();
-    const { users, loading, error } = useSelector(state => state.users);
+    const { positions, loading, error } = useSelector(state => state.positions);
 
+
+    //recarga la lista de puestos cuando hay un cambio
     useEffect(() => {
-        dispatch(fetchUsers());
+        dispatch(fetchPositions());
     }, [dispatch]);
 
     const handleDeleteClick = async (id) => {
 
-        if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-            dispatch(deleteUser(id));
+        if (window.confirm("¿Estás seguro de que deseas eliminar este puesto?")) {
+            dispatch(deletePosition(id));
         }
     };
+
+    
 
     //PARA ORDENAR
     const [ sortField, setSortField ] = useState(null);
@@ -33,15 +38,12 @@ const UserList = () => {
         setSortDirection(newSortDirection); 
     };
 
-
     //PARA BUSCAR
     const [ searchTerm, setSearchTerm ] = useState('');
-
-       const filteredUsers = users.filter((user) => {
+   
+       const filteredPositions = positions.filter((position) => {
             return (
-                user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                user.role.toLowerCase().includes(searchTerm.toLowerCase())
+                position.title.toLowerCase().includes(searchTerm.toLowerCase())
             );
         });
     
@@ -49,16 +51,16 @@ const UserList = () => {
 
     //PARA PAGINACION   
     const [pageNumber, setPageNumber] = useState(0);
-    const usersPerPage = 5;
-    const pagesVisited = pageNumber * usersPerPage;
+    const positionsPerPage = 5;
+    const pagesVisited = pageNumber * positionsPerPage;
     
-    const pageCount =  Math.ceil(filteredUsers.length / usersPerPage);//total de páginas necesarias redondeando para arriba
+    const pageCount =  Math.ceil(filteredPositions.length / positionsPerPage);//total de páginas necesarias redondeando para arriba
     const changePage = ({ selected }) => {
         setPageNumber(selected);//actualiza la página seleccionada
     };
 
-    //array nuevo con empleados ordenados
-    const sortedUsers = filteredUsers.sort(( a, b ) => {
+    //array nuevo con puestos ordenados
+    const sortedPositions = filteredPositions.sort(( a, b ) => {
         if(sortField){        //solo ordena si se especificó un campo para ordenar
             const fieldA = a[sortField];
             const fieldB = b[sortField];
@@ -76,28 +78,28 @@ const UserList = () => {
     const role = token ? JSON.parse(atob(token.split('.')[1])).role : null;
 
     if(loading){
-        return <div className="alert alert-info">Cargando usuarios...</div>;
+        return <div className="alert alert-info">Cargando puestos...</div>;
     }
 
     if(error){
         return <div className="alert alert-danger">{error}</div>;
     }
 
-    if (users.length === 0) {
+    if (positions.length === 0) {
         return (
             <div className="alert alert-info">
-                No hay usuarios disponibles
+                No hay puestos disponibles
             </div>);
     }
 
     return (
         <div>
-            <h2 className="mb-4">Lista de usuarios:</h2>
+            <h2 className="mb-4">Lista de puestos:</h2>
             {role === 'admin' && (
-                <Link 
-                    to="/users/new" className="btn btn-primary mb-3"
-                >Nuevo Usuario</Link> 
-            )}
+            <Link 
+                to="/positions/new" className="btn btn-primary mb-3"
+            >Nuevo puesto</Link> 
+        )}
             <div className="mb-3">
                 <input
                     type="text"
@@ -111,52 +113,31 @@ const UserList = () => {
                 <thead>
 
                     <tr>
-                        <th onClick={() => handleSort('username')}>Nombre</th>
-                        <th onClick={() => handleSort('role')}>Rol</th>
-                        <th onClick={() => handleSort('email')}>Email</th>
-                        <th>Acción</th>
+                        <th onClick={() => handleSort('title')}>Puesto</th>
+                        {role === 'admin' && <th>Acción</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {/* se crea una copia de una porcion del array
-                    devuelve los empleados del 0 al 4 */}
-                    {sortedUsers.slice(pagesVisited, pagesVisited + usersPerPage).map(user => (
-                        <tr key={user.id}>
+                    devuelve los puestos del 0 al 4 */}
+                    {sortedPositions.slice(pagesVisited, pagesVisited + positionsPerPage).map(position => (
+                        <tr key={position.id}>
                             <td>
-                                <Link 
-                                    className="user-link"
-                                    to={`/users/${user.id}`}>
-                                    {user.username}
+                                <p
+                                    className="position-link">
+                                    {position.title}
                                     
-                                </Link>
+                                </p>
                             </td>
-                            <td>
-                                <Link
-                                    className="user-link"
-                                    to={`/users/${user.id}`}>
-                                    {user.role}
-                                </Link>
+                            {role === 'admin' && (
+                                <td>
+                                <button 
+                                    className="btn btn-danger" 
+                                    onClick={() => handleDeleteClick(position.id)}
+                                >Eliminar</button>
                             </td>
-                            <td>
-                                <Link
-                                    className="user-link"
-                                    to={`/users/${user.id}`}>
-                                    {user.email}
-                                </Link>
-                            </td>
+                            )}
                             
-                            <td>
-                                <Link to={`/users/${user.id}`} 
-                                    className="btn btn-info ml-2"
-                                >Detalles</Link>
-                                {role === 'admin' && (
-                                    <button 
-                                        className="btn btn-danger" 
-                                        onClick={() => handleDeleteClick(user.id)}
-                                    >Eliminar</button>
-                                )}
-                            </td>
-
                         </tr>
                     ))}
                 </tbody>
@@ -182,4 +163,4 @@ const UserList = () => {
     );
 };
 
-export default UserList;
+export default PositionList;

@@ -62,25 +62,6 @@ const employeeSlice = createSlice({
     selectEmployee: (state, action) => {
       state.selectedEmployee = state.employees.find(employee => employee.id === action.payload);
     },
-  sortEmployees: (state, action) => {
-    const { field, direction } = action.payload;
-    state.employees.sort((a, b) => {
-      if (direction === 'asc') {
-        return a[field] > b[field] ? 1 : -1;
-      } else {
-        return a[field] < b[field] ? 1 : -1;
-      }
-    });
-  },
-  filterEmployees: (state, action) => {
-    const searchTerm = action.payload.toLowerCase();
-    state.employees = state.employees.filter(
-      (employee) =>
-        employee.name.toLowerCase().includes(searchTerm) ||
-        employee.email.toLowerCase().includes(searchTerm) ||
-        employee.position.title.toLowerCase().includes(searchTerm)
-    );
-  },
 },
   extraReducers: (builder) => {
     builder

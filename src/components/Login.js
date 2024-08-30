@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () =>{
@@ -25,6 +25,8 @@ const Login = () =>{
             console.log('Error al iniciar sesion: ', error);
         }
     }
+
+    
     return (
         <div className='container'>
             <h2>Iniciar Sesión</h2>
@@ -63,6 +65,7 @@ const Login = () =>{
                     className='btn btn-primary'
                 >Iniciar sesión</button>
             </form>
+            <Link>¿Olvidaste tu contraseña?</Link>
         </div>
     )
 };

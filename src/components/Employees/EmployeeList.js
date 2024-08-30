@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEmployees, deleteEmployee, sortEmployees, filterEmployees } from '../../reducers/employeeSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { fetchEmployees, deleteEmployee } from '../../reducers/employeeSlice';
+import { Link } from 'react-router-dom';
 import '../../index.css';
 import ReactPaginate from "react-paginate";
 //import axios from 'axios';
@@ -9,7 +9,7 @@ import ReactPaginate from "react-paginate";
 const EmployeeList = () => {
     const dispatch = useDispatch();
     const { employees, loading, error } = useSelector(state => state.employees);
-    const navigate = useNavigate();
+
     //const [ employees, setEmployees ] = useState([]);
     //const [loading, setLoading] = useState(true);
     //const [error, setError] = useState(null);
@@ -59,23 +59,17 @@ const EmployeeList = () => {
     const [ sortDirection, setSortDirection ] = useState('asc');
 
     const handleSort = (field) => {
-        dispatch(sortEmployees({ field, direction: 'asc' }));
-        /* const newSortDirection = 
+        const newSortDirection = 
             sortField === field &&
             sortDirection === 'asc' ? 'desc' : 'asc'
         //actualiza el campo y la direccion
         setSortField(field);
-        setSortDirection(newSortDirection); */
+        setSortDirection(newSortDirection); 
     };
 
     //PARA BUSCAR
     const [ searchTerm, setSearchTerm ] = useState('');
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-        dispatch(filterEmployees(e.target.value));
-    };
-   
        const filteredEmployees = employees.filter((employee) => {
             return (
                 employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,6 +103,10 @@ const EmployeeList = () => {
         }
         return 0;//en caso de no haber campo, no cambia el orden
     });
+
+        // Obtengo el rol del usuario desde el localStorage
+        const token = localStorage.getItem("token");
+        const role = token ? JSON.parse(atob(token.split('.')[1])).role : null;
     
     if(loading){
         return <div className="alert alert-info">Cargando empleados...</div>;
@@ -128,9 +126,11 @@ const EmployeeList = () => {
     return (
         <div>
             <h2 className="mb-4">Lista de empleados:</h2>
-            <Link 
-                to="/employees/new" className="btn btn-primary mb-3"
-            >Nuevo Empleado</Link> 
+            {role === 'admin' && (
+                <Link 
+                    to="/employees/new" className="btn btn-primary mb-3"
+                >Nuevo Empleado</Link> 
+            )}
             <div className="mb-3">
                 <input
                     type="text"
@@ -182,10 +182,12 @@ const EmployeeList = () => {
                                 <Link to={`/employees/${employee.id}`} 
                                     className="btn btn-info ml-2"
                                 >Detalles</Link>
-                                <button 
-                                    className="btn btn-danger" 
-                                    onClick={() => handleDeleteClick(employee.id)}
-                                >Eliminar</button>
+                                {role === 'admin' && (
+                                    <button 
+                                        className="btn btn-danger" 
+                                        onClick={() => handleDeleteClick(employee.id)}
+                                    >Eliminar</button>
+                                )}
                             </td>
 
                         </tr>
