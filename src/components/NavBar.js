@@ -1,9 +1,9 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
-  const location = useLocation();
+  //const location = useLocation();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -13,7 +13,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar  navbar-dark bg-dark">
       <div className="container">
         <Link to="/employees" className="navbar-brand">
           Vortex
@@ -21,29 +21,25 @@ const Navbar = () => {
         {token && (
           <>
             <ul className="navbar-nav me-auto">
-            {location.pathname !== "/employees" && (
+           {/*  {location.pathname !== "/employees" && ( */}
                 <li className="nav-item">
                   <Link to="/employees" className="nav-link">
                     Empleados
                   </Link>
                 </li>
-              )}
+              {/* )} */}
 
-              {location.pathname !== "/users" && (
             <li className="nav-item">
                 <Link to="/users" className="nav-link">
                   Usuarios
                 </Link>
               </li>
-              )}
-
-              {location.pathname !== "/positions" && (
+              
               <li className="nav-item">
                 <Link to="/positions" className="nav-link">
                   Puestos
                 </Link>
               </li>
-              )}
               
             </ul>
             <ul className="navbar-nav me-auto">

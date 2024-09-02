@@ -29,7 +29,7 @@ const PositionCreate = () => {
        }
     };
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='primer-div' onSubmit={handleSubmit}>
             <h2>Nuevo puesto</h2>
             <div className='form-group'>
                 <label>Titulo del Puesto:</label>

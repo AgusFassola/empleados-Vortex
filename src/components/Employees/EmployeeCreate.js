@@ -79,7 +79,7 @@ const EmployeeCreate = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='primer-div' onSubmit={handleSubmit}>
             <h2>Nuevo empleado</h2>
             <div className='form-group'>
                 <label>Nombre de Usuario:</label>

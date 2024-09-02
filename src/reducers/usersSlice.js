@@ -32,10 +32,16 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
   return id;
 });
 
-//cambio de contraseña
-export const requestPasswordChange = createAsyncThunk('users/requestPasswordChange', async (email) => {
+//Enviar correo para cambio de contraseña
+export const changePassword = createAsyncThunk('users/changePassword', async (email) => {
   const response = await axios.post('http://localhost:5000/api/users/change-password', { email });
-  return response.data;
+  return response.data.message;
+});
+
+// Establecer nueva contraseña
+export const updatePassword = createAsyncThunk('users/updatePassword', async ({ token, password }) => {
+  const response = await axios.post(`http://localhost:5000/api/users/new-password/${token}`, { password });
+  return response.data.message; // Mensaje de éxito o error
 });
 
 const initialState = {
@@ -75,7 +81,7 @@ const userSlice = createSlice({
         })
         .addCase(fetchUserById.fulfilled, (state, action) => {
           state.loading = false;
-          state.selectedUser = action.payload;//empleado encontrado
+          state.selectedUser = action.payload;//usuario encontrado
         })
         .addCase(fetchUserById.rejected, (state, action) => {
           state.loading = false;
@@ -98,10 +104,39 @@ const userSlice = createSlice({
         //handle deleteuser
         .addCase(deleteUser.fulfilled, (state, action) => {
           state.users = state.users.filter(user => user.id !== action.payload);
+        })
+
+        //enviar correo
+        .addCase(changePassword.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+          state.passwordChangeMessage = null;
+        })
+        .addCase(changePassword.fulfilled, (state, action) => {
+          state.loading = false;
+          state.passwordChangeMessage = action.payload; // Mensaje de éxito
+        })
+        .addCase(changePassword.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.error.message;
+        })
+  
+        // Resetear contraseña
+        .addCase(updatePassword.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(updatePassword.fulfilled, (state, action) => {
+          state.loading = false;
+          state.passwordChangeMessage = action.payload; // Mensaje de éxito
+        })
+        .addCase(updatePassword.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.error.message;
         });
   },
 });
 
 //export const { fetchusers, deleteuser, selectuser, updateuser, adduser } = userSlice.actions;
-export const { selectUser, sortUsers, filterUsers } = userSlice.actions;
+export const { selectUser } = userSlice.actions;
 export default userSlice.reducer;

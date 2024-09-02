@@ -91,7 +91,7 @@ const UserList = () => {
     }
 
     return (
-        <div>
+        <div className="primer-div">
             <h2 className="mb-4">Lista de usuarios:</h2>
             {role === 'admin' && (
                 <Link 

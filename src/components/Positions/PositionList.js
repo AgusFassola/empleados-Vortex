@@ -93,7 +93,7 @@ const PositionList = () => {
     }
 
     return (
-        <div>
+        <div className="primer-div">
             <h2 className="mb-4">Lista de puestos:</h2>
             {role === 'admin' && (
             <Link 

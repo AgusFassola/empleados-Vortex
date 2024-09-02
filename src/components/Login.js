@@ -65,7 +65,8 @@ const Login = () =>{
                     className='btn btn-primary'
                 >Iniciar sesión</button>
             </form>
-            <Link>¿Olvidaste tu contraseña?</Link>
+            <Link to="/users/change-password"
+            >¿Olvidaste tu contraseña?</Link>
         </div>
     )
 };

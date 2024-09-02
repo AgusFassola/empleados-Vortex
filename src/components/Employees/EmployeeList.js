@@ -124,7 +124,7 @@ const EmployeeList = () => {
     }
 
     return (
-        <div>
+        <div className="primer-div">
             <h2 className="mb-4">Lista de empleados:</h2>
             {role === 'admin' && (
                 <Link 

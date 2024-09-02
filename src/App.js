@@ -9,6 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import UserList from "./components/Users/UserList";
 import UserCreate from "./components/Users/UserCreate";
 import UserDetail from "./components/Users/UserDetail";
+import UserChangePassword from "./components/Users/UserChangePassword";
+import UserNewPassword from "./components/Users/UserNewPassword";
 import PositionList from "./components/Positions/PositionList";
 import PositionCreate from "./components/Positions/PositionCreate";
 
@@ -48,6 +50,12 @@ const App = () => {
           element={
             <PrivateRoute><UserDetail /></PrivateRoute>
           }
+        />
+        <Route path="/users/change-password"
+          element={ <UserChangePassword /> }
+        />
+        <Route path="/users/new-password/:token"
+          element={ <UserNewPassword /> }
         />
         <Route path="/positions" 
           element={
